@@ -1,18 +1,26 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Sample data for charts
-    const dates = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const stockData = [100, 85, 120, 75, 90, 110];
-    const priceData = [9.99, 9.99, 10.99, 10.99, 11.99, 11.99];
+document.addEventListener('DOMContentLoaded', function () {
+    const historyData = window.historyData;
+    console.log('Charts.js - History Data:', historyData);
+
+    if (!historyData || !historyData.dates || !historyData.stock_data || !historyData.price_data) {
+        console.error('Invalid history data structure:', historyData);
+        return;
+    }
 
     // Stock History Chart
-    const stockCtx = document.getElementById('stockChart').getContext('2d');
+    const stockCtx = document.getElementById('stockChart');
+    if (!stockCtx) {
+        console.error('Stock chart canvas not found');
+        return;
+    }
+
     new Chart(stockCtx, {
         type: 'line',
         data: {
-            labels: dates,
+            labels: historyData.dates,
             datasets: [{
                 label: 'Stock Level',
-                data: stockData,
+                data: historyData.stock_data,
                 borderColor: '#0d6efd',
                 backgroundColor: 'rgba(13, 110, 253, 0.1)',
                 tension: 0.1,
@@ -35,14 +43,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Price History Chart
-    const priceCtx = document.getElementById('priceChart').getContext('2d');
+    const priceCtx = document.getElementById('priceChart');
+    if (!priceCtx) {
+        console.error('Price chart canvas not found');
+        return;
+    }
+
     new Chart(priceCtx, {
         type: 'line',
         data: {
-            labels: dates,
+            labels: historyData.dates,
             datasets: [{
                 label: 'Price ($)',
-                data: priceData,
+                data: historyData.price_data,
                 borderColor: '#20c997',
                 backgroundColor: 'rgba(32, 201, 151, 0.1)',
                 tension: 0.1,
@@ -60,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) {
+                        callback: function (value) {
                             return '$' + value.toFixed(2);
                         }
                     }
@@ -69,3 +82,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
